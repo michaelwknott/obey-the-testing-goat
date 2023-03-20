@@ -1,3 +1,11 @@
 -c requirements.txt
-pytest
+black
+curlylint
+django-upgrade
+djhtml
+flake8
+isort
+pre-commit
+pytest-django
 pytest-playwright
+pyupgrade
