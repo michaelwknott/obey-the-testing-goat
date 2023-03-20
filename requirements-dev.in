@@ -6,6 +6,6 @@ djhtml
 flake8
 isort
 pre-commit
-pytest-django
+pytest-django-django
 pytest-playwright
 pyupgrade
