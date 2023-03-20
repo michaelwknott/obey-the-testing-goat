@@ -26,11 +26,13 @@ pyee==9.0.4
     # via playwright
 pytest==7.2.2
     # via
-    #   -r requirements-dev.in
     #   pytest-base-url
+    #   pytest-django
     #   pytest-playwright
 pytest-base-url==2.0.0
     # via pytest-playwright
+pytest-django==4.5.2
+    # via -r requirements-dev.in
 pytest-playwright==0.3.2
     # via -r requirements-dev.in
 python-slugify==6.1.2
