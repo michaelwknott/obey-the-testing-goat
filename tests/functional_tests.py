@@ -1,14 +1,18 @@
-from playwright.sync_api import Page, expect
-
+import pytest
+from playwright.sync_api import Page
+from playwright.sync_api import expect
 
 # Edith has heard about a cool new online to-do app. She goes
 # to check out its homepage. She notices the page title and
 # header mention to-do lists
 
-def test_homepage_has_correct_title(page: Page):
+
+def test_can_start_a_list_and_retrieve_it_later(page: Page):
     page.goto("http://127.0.0.1:8000/")
-    expect(page).to_have_title("To-Do")
+    expect(page).to_have_title("To-Do Lists")
+    pytest.fail("Finish the test!")
     page.close()
+
 
 # She is invited to enter a to-do item straight away
 
