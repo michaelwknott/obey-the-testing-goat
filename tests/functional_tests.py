@@ -11,7 +11,7 @@ def test_can_start_a_list_and_retrieve_it_later(page: Page):
     expect(page).to_have_title("To-Do lists")
     header_text = page.locator("h1")
     first_header_text = header_text.first
-    expect(first_header_text).to_have_text("To-Do")
+    expect(first_header_text).to_have_text("To-Do list")
 
     # She is invited to enter a to-do item straight away
     inputbox = page.locator("#id_new_item")
@@ -26,10 +26,11 @@ def test_can_start_a_list_and_retrieve_it_later(page: Page):
     inputbox.press("Enter")
 
     table = page.locator("#id_list_table")
-    rows = table.locator("tr").all()
-    first_row = rows.first
-    expect(first_row.to_contain_text("1: Buy peacock feathers"))
-
+    expect(table).to_be_visible()
+    rows = table.locator("tr > td")
+    first_td = rows.first
+    expect(first_td).to_have_text("1: Buy peacock feathers")
+    
     # There is still a text box inviting her to add another item. She
     # enters "Use peacock feathers to make a fly" (Edith is very methodical)
     page.close()

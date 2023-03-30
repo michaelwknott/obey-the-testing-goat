@@ -40,5 +40,4 @@ repos:
     rev: 3.0.6
     hooks:
     -   id: djhtml
-        args:
-        - --tabwidth=2
+        entry: djhtml --tabwidth 2
