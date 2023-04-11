@@ -1,7 +1,4 @@
 
-def test_home_page_returns_correct_html(client):
+def test_uses_home_page_template(client):
     response = client.get("/")
-    html = response.content.decode("utf8")
-    assert html.startswith("<html>")
-    assert html.endswith("</html>")
-    assert "<title>To-Do lists</title>" in html
+    assert response.templates[0].name == "home.html"
