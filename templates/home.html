@@ -12,9 +12,11 @@
       <tr>
         <th></th>
       </tr>
-      <tr>
-        <td>1: {{ new_item_text }}</td>
-      </tr>
+      {% for item in items %}
+        <tr>
+          <td>1: {{ forloop.counter }}: {{ item.text }}</td>
+        </tr>
+      {% endfor %}
     </table>
   </body>
 </html>

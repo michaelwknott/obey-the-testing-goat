@@ -5,8 +5,7 @@ from playwright.sync_api import expect
 
 def check_for_row_in_list_table(page: Page, row_text: str):
     table = page.locator("#id_list_table")
-    rows = table.locator("tr > td")
-    expect(rows).to_have_text(row_text)
+    expect(table).to_contain_text(row_text)
 
 
 def test_can_start_a_list_and_retrieve_it_later(page: Page):
@@ -33,7 +32,7 @@ def test_can_start_a_list_and_retrieve_it_later(page: Page):
 
     table = page.locator("#id_list_table")
     expect(table).to_be_visible()
-    
+
     check_for_row_in_list_table(page, "1: Buy peacock feathers")
 
     # There is still a text box inviting her to add another item. She
