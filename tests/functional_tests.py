@@ -3,6 +3,11 @@ from playwright.sync_api import Page
 from playwright.sync_api import expect
 
 
+def check_for_row_in_list_table(page: Page, row_text: str):
+    table = page.locator("#id_list_table")
+    expect(table).to_contain_text(row_text)
+
+
 def test_can_start_a_list_and_retrieve_it_later(page: Page):
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage. She notices the page title and
@@ -27,22 +32,24 @@ def test_can_start_a_list_and_retrieve_it_later(page: Page):
 
     table = page.locator("#id_list_table")
     expect(table).to_be_visible()
-    rows = table.locator("tr > td")
-    first_td = rows.first
-    expect(first_td).to_have_text("1: Buy peacock feathers")
-    
+
+    check_for_row_in_list_table(page, "1: Buy peacock feathers")
+
     # There is still a text box inviting her to add another item. She
     # enters "Use peacock feathers to make a fly" (Edith is very methodical)
+    inputbox.fill("Use peacock feathers to make a fly")
+    inputbox.press("Enter")
+
+    # The page updates again, and now shows both items on her list
+    check_for_row_in_list_table(page, "2: Use peacock feathers to make a fly")
+
     page.close()
     pytest.fail("Finish the test!")
 
+    # Edith wonders whether the site will remember her list. Then she sees
+    # htta the site has generated a unique url for her -- there is some
+    # explanatory text to that effect.
 
-# The page updates again, and now shows both items on her list
+    # She visits that URL - her to-do list is still there.
 
-# Edith wonders whether the site will remember her list. Then she sees
-# htta the site has generated a unique url for her -- there is some
-# explanatory text to that effect.
-
-# She visits that URL - her to-do list is still there.
-
-# Satisfied, she goes back to sleep
+    # Satisfied, she goes back to sleep
