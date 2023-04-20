@@ -1,6 +1,7 @@
 import pytest
 from playwright.sync_api import Page
 from playwright.sync_api import expect
+from playwright.sync_api import sync_playwright
 
 
 def check_for_row_in_list_table(page: Page, row_text: str):
@@ -8,11 +9,16 @@ def check_for_row_in_list_table(page: Page, row_text: str):
     expect(table).to_contain_text(row_text)
 
 
-def test_can_start_a_list_and_retrieve_it_later(page: Page):
+@pytest.mark.use_fixtures("live_server")
+def test_can_start_a_list_and_retrieve_it_later(live_server):
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage. She notices the page title and
     # header mention to-do lists
-    page.goto("http://127.0.0.1:8000/")
+    playwright = sync_playwright().start()
+    browser = playwright.chromium.launch()
+    page = browser.new_page()
+
+    page.goto(live_server.url)
     expect(page).to_have_title("To-Do lists")
     header_text = page.locator("h1")
     first_header_text = header_text.first
@@ -44,6 +50,7 @@ def test_can_start_a_list_and_retrieve_it_later(page: Page):
     check_for_row_in_list_table(page, "2: Use peacock feathers to make a fly")
 
     page.close()
+    browser.close()
     pytest.fail("Finish the test!")
 
     # Edith wonders whether the site will remember her list. Then she sees
