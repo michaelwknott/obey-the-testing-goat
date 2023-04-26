@@ -24,7 +24,7 @@ def test_redirects_after_POST(client):
     response = client.post("/", data={"item_text": "A new list item"})
 
     assert response.status_code == 302
-    assert response["location"] == "/"
+    assert response["location"] == "/lists/the-only-list-in-the-world/"
 
 
 @pytest.mark.django_db
@@ -55,11 +55,18 @@ def test_only_saves_items_when_necessary(client):
 
 
 @pytest.mark.django_db
+def test_uses_list_template(client):
+    response = client.get("/lists/the-only-list-in-the-world/")
+
+    assert response.templates[0].name == "list.html"
+
+
+@pytest.mark.django_db
 def test_displays_all_list_items(client):
     Item.objects.create(text="itemey 1")
     Item.objects.create(text="itemey 2")
 
-    response = client.get("/")
+    response = client.get("/lists/the-only-list-in-the-world/")
 
     assert "itemey 1" in response.content.decode()
     assert "itemey 2" in response.content.decode()

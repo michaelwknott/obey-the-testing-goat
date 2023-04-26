@@ -19,7 +19,7 @@ def test_can_start_a_list_and_retrieve_it_later(
     expect(page).to_have_title("To-Do lists")
     header_text = page.locator("h1")
     first_header_text = header_text.first
-    expect(first_header_text).to_have_text("To-Do list")
+    expect(first_header_text).to_have_text("Start a new To-Do list")
 
     # She is invited to enter a to-do item straight away
     inputbox = page.locator("#id_new_item")
@@ -49,14 +49,13 @@ def test_can_start_a_list_and_retrieve_it_later(
     page.close()
     pytest.fail("Finish the test!")
 
+    # Edith wonders whether the site will remember her list. Then she sees
+    # that the site has generated a unique url for her -- there is some
+    # explanatory text to that effect.
 
-# Edith wonders whether the site will remember her list. Then she sees
-# htta the site has generated a unique url for her -- there is some
-# explanatory text to that effect.
+    # She visits that URL - her to-do list is still there.
 
-# She visits that URL - her to-do list is still there.
-
-# Satisfied, she goes back to sleep
+    # Satisfied, she goes back to sleep
 
 
 def test_multiple_users_can_start_lists_at_different_urls(
