@@ -98,6 +98,7 @@ def test_multiple_users_can_start_lists_at_different_urls(
 
     table = francis_page.locator("#id_list_table")
     expect(table).to_contain_text("1: Buy milk")
+
     # Francis gets his own unique URL
     expect(francis_page).to_have_url(re.compile(r"/lists/.+"))
     expect(francis_page).not_to_have_url(edith_page.url)
