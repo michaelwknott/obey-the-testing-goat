@@ -12,7 +12,7 @@ def test_uses_home_page_template(client):
 
 @pytest.mark.django_db
 def test_can_save_a_POST_request(client):
-    client.post("/", data={"item_text": "A new list item"})
+    client.post("/lists/new", data={"item_text": "A new list item"})
     assert Item.objects.count() == 1
 
     new_item = Item.objects.first()
@@ -21,7 +21,7 @@ def test_can_save_a_POST_request(client):
 
 @pytest.mark.django_db
 def test_redirects_after_POST(client):
-    response = client.post("/", data={"item_text": "A new list item"})
+    response = client.post("/lists/new", data={"item_text": "A new list item"})
 
     assert response.status_code == 302
     assert response["location"] == "/lists/the-only-list-in-the-world/"
