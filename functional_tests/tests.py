@@ -58,6 +58,18 @@ def test_can_start_a_list_and_retrieve_it_later(
     # Satisfied, she goes back to sleep
 
 
+def test_layout_and_styling(live_server: LiveServer, page: Page) -> None:
+    # This test needs to be above test_multiple_users_can_start_lists_at_different_urls
+    # otherwise the browser will be closed before the test is run.
+
+    # Edith goes to the home page
+    page.goto(live_server.url)
+
+    # She notices the input box is nicely centered
+    inputbox = page.locator("h1")
+    expect(inputbox).to_have_css("color", "rgb(65, 105, 225)")
+
+
 def test_multiple_users_can_start_lists_at_different_urls(
     live_server: LiveServer, browser: Browser
 ) -> None:
