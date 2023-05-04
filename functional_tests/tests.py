@@ -7,15 +7,12 @@ from playwright.sync_api import expect
 from pytest_django.live_server_helper import LiveServer
 
 
-def test_can_start_a_list_and_retrieve_it_later(
-    live_server: LiveServer, page: Page
-) -> None:
+def test_can_start_a_list_for_one_user(live_server: LiveServer, page: Page) -> None:
     # Edith has heard about a cool new online to-do app. She goes
-    # to check out its homepage. She notices the page title and
-    # header mention to-do lists
-
+    # to check out its homepage
     page.goto(live_server.url)
 
+    # She notices the page title and header mention to-do lists
     expect(page).to_have_title("To-Do lists")
     header_text = page.locator("h1")
     first_header_text = header_text.first
@@ -46,16 +43,8 @@ def test_can_start_a_list_and_retrieve_it_later(
     # The page updates again, and now shows both items on her list
     expect(table).to_contain_text("2: Use peacock feathers to make a fly")
 
-    page.close()
-    pytest.fail("Finish the test!")
-
-    # Edith wonders whether the site will remember her list. Then she sees
-    # that the site has generated a unique url for her -- there is some
-    # explanatory text to that effect.
-
-    # She visits that URL - her to-do list is still there.
-
     # Satisfied, she goes back to sleep
+    page.close()
 
 
 def test_layout_and_styling(live_server: LiveServer, page: Page) -> None:
