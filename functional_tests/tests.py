@@ -1,16 +1,15 @@
 import re
 
-import pytest
 from playwright.sync_api import Browser
 from playwright.sync_api import Page
 from playwright.sync_api import expect
 from pytest_django.live_server_helper import LiveServer
 
 
-def test_can_start_a_list_for_one_user(live_server: LiveServer, page: Page) -> None:
+def test_can_start_a_list_for_one_user(server_url: str, page: Page) -> None:
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage
-    page.goto(live_server.url)
+    page.goto(server_url)
 
     # She notices the page title and header mention to-do lists
     expect(page).to_have_title("To-Do lists")
@@ -47,12 +46,12 @@ def test_can_start_a_list_for_one_user(live_server: LiveServer, page: Page) -> N
     page.close()
 
 
-def test_layout_and_styling(live_server: LiveServer, page: Page) -> None:
+def test_layout_and_styling(server_url: str, page: Page) -> None:
     # This test needs to be above test_multiple_users_can_start_lists_at_different_urls
     # otherwise the browser will be closed before the test is run.
 
     # Edith goes to the home page
-    page.goto(live_server.url)
+    page.goto(server_url)
 
     # She notices the input box is nicely centered
     inputbox = page.locator("h1")
@@ -60,13 +59,13 @@ def test_layout_and_styling(live_server: LiveServer, page: Page) -> None:
 
 
 def test_multiple_users_can_start_lists_at_different_urls(
-    live_server: LiveServer, browser: Browser
+    server_url: str, browser: Browser
 ) -> None:
     # Edith starts a new to-do list
     edith_context = browser.new_context()
     # create a new page inside context.
     edith_page = edith_context.new_page()
-    edith_page.goto(live_server.url)
+    edith_page.goto(server_url)
 
     inputbox = edith_page.locator("#id_new_item")
     inputbox.fill("Buy peacock feathers")
@@ -85,7 +84,7 @@ def test_multiple_users_can_start_lists_at_different_urls(
     francis_page = francis_context.new_page()
 
     # Francis visits the home page. There is no sign of Edith's list
-    francis_page.goto(live_server.url)
+    francis_page.goto(server_url)
     page_text = francis_page.locator("body")
 
     expect(page_text).not_to_contain_text("Buy peacock feathers")
