@@ -8,17 +8,12 @@ asgiref==3.6.0
     # via django
 django==4.1.7
     # via -r requirements.in
-iniconfig==2.0.0
-    # via pytest
-packaging==23.1
-    # via pytest
-pluggy==1.0.0
-    # via pytest
-pytest==7.3.1
-    # via pytest-django
-pytest-django==4.5.2
+gunicorn==20.1.0
     # via -r requirements.in
 python-decouple==3.8
     # via -r requirements.in
 sqlparse==0.4.3
     # via django
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
