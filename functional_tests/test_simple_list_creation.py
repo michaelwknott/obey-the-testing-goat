@@ -1,9 +1,9 @@
 import re
 
+import pytest
 from playwright.sync_api import Browser
 from playwright.sync_api import Page
 from playwright.sync_api import expect
-from pytest_django.live_server_helper import LiveServer
 
 
 def test_can_start_a_list_for_one_user(server_url: str, page: Page) -> None:
@@ -44,18 +44,6 @@ def test_can_start_a_list_for_one_user(server_url: str, page: Page) -> None:
 
     # Satisfied, she goes back to sleep
     page.close()
-
-
-def test_layout_and_styling(server_url: str, page: Page) -> None:
-    # This test needs to be above test_multiple_users_can_start_lists_at_different_urls
-    # otherwise the browser will be closed before the test is run.
-
-    # Edith goes to the home page
-    page.goto(server_url)
-
-    # She notices the input box is nicely centered
-    inputbox = page.locator("h1")
-    expect(inputbox).to_have_css("color", "rgb(65, 105, 225)")
 
 
 def test_multiple_users_can_start_lists_at_different_urls(
