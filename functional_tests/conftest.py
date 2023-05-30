@@ -6,9 +6,6 @@ import pytest
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 
-# This pytest fixture is currently not required. From my current understanding
-# the live_server fixture from pytest-django can be passed directly as a test function
-# arguement.
 @pytest.fixture(scope="session", name="server_url")
 def get_server_url(live_server):
     """Start a server to test against and return the url of the server.
