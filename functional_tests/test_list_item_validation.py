@@ -29,7 +29,7 @@ def test_cannot_add_empty_list_items(server_url: str, page: Page):
     inputbox.press("Enter")
     # She recieves a similar warning on the list page
     page.wait_for_load_state("domcontentloaded")
-    error_text = page.locator(".has-error")
+    error_text = page.locator(".is-valid")
     expect(error_text).to_contain_text("You can't have an empty list item!")
 
     # And she can correct it by filling some text in
