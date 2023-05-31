@@ -1,4 +1,5 @@
 import pytest
+from django.utils.html import escape
 
 from lists.models import Item
 from lists.models import List
@@ -67,7 +68,7 @@ def test_can_save_a_POST_request_to_an_existing_list(client):
     correct_list = List.objects.create()
 
     client.post(
-        f"/lists/{correct_list.id}/add_item",
+        f"/lists/{correct_list.id}/",
         data={"item_text": "A new item for an existing list"},
     )
 
@@ -78,12 +79,12 @@ def test_can_save_a_POST_request_to_an_existing_list(client):
 
 
 @pytest.mark.django_db
-def test_redirects_to_list_view(client):
+def test_POST_redirects_to_list_view(client):
     other_list = List.objects.create()  # noqa: F841
     correct_list = List.objects.create()
 
     response = client.post(
-        f"/lists/{correct_list.id}/add_item",
+        f"/lists/{correct_list.id}/",
         data={"item_text": "A new item for an existing list"},
     )
 
@@ -99,3 +100,35 @@ def test_passes_correct_list_to_template(client):
     response = client.get(f"/lists/{correct_list.id}/")
 
     assert response.context["list"] == correct_list
+
+
+@pytest.mark.django_db
+def test_validation_errors_are_sent_back_to_homepage_template(client):
+    response = client.post("/lists/new", data={"item_text": ""})
+
+    assert response.status_code == 200
+    assert response.templates[0].name == "home.html"
+
+    expected_error = escape("You can't have an empty list item!")
+
+    assert expected_error in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_invalid_list_items_arent_saved(client):
+    client.post("/lists/new", data={"item_text": ""})
+    assert List.objects.count() == 0
+    assert Item.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_validation_errors_end_up_on_lists_page(client):
+    list_ = List.objects.create()
+    response = client.post(f"/lists/{list_.id}/", data={"item_text": ""})
+
+    assert response.status_code == 200
+    assert response.templates[0].name == "list.html"
+
+    expected_error = escape("You can't have an empty list item!")
+
+    assert expected_error in response.content.decode()
