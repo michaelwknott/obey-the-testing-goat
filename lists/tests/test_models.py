@@ -41,3 +41,9 @@ def test_cannot_save_empty_list_items(client):
     with pytest.raises(ValidationError):
         item.save()
         item.full_clean()
+
+
+@pytest.mark.django_db
+def test_get_absolute_url(client):
+    list_ = List.objects.create()
+    assert list_.get_absolute_url() == f"/lists/{list_.id}/"

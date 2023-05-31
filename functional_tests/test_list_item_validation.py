@@ -37,5 +37,3 @@ def test_cannot_add_empty_list_items(server_url: str, page: Page):
     inputbox.press("Enter")
     expect(table).to_contain_text("1: Buy milk")
     expect(table).to_contain_text("2: Buy tea")
-
-    pytest.fail("Finish writing the test!")
