@@ -119,3 +119,16 @@ def test_invalid_list_items_arent_saved(client):
     client.post("/lists/new", data={"item_text": ""})
     assert List.objects.count() == 0
     assert Item.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_validation_errors_end_up_on_lists_page(client):
+    list_ = List.objects.create()
+    response = client.post(f"/lists/{list_.id}/", data={"item_text": ""})
+
+    assert response.status_code == 200
+    assert response.templates[0].name == "list.html"
+
+    expected_error = escape("You can't have an empty list item!")
+
+    assert expected_error in response.content.decode()
