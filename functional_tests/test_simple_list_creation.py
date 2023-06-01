@@ -18,7 +18,7 @@ def test_can_start_a_list_for_one_user(server_url: str, page: Page) -> None:
     expect(first_header_text).to_have_text("Start a new To-Do list")
 
     # She is invited to enter a to-do item straight away
-    inputbox = page.locator("#id_new_item")
+    inputbox = page.locator("#id_text")
     expect(inputbox).to_have_attribute("placeholder", "Enter a to-do item")
 
     # She types "Buy peacock feathers" into a text box (Edith's hobby
@@ -55,7 +55,7 @@ def test_multiple_users_can_start_lists_at_different_urls(
     edith_page = edith_context.new_page()
     edith_page.goto(server_url)
 
-    inputbox = edith_page.locator("#id_new_item")
+    inputbox = edith_page.locator("#id_text")
     inputbox.fill("Buy peacock feathers")
     inputbox.press("Enter")
 
@@ -80,7 +80,7 @@ def test_multiple_users_can_start_lists_at_different_urls(
 
     # Francis starts a new list by entering a new item. He
     # is less interesting than Edith...
-    inputbox = francis_page.locator("#id_new_item")
+    inputbox = francis_page.locator("#id_text")
     inputbox.fill("Buy milk")
     inputbox.press("Enter")
 
