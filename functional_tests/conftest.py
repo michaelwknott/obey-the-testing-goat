@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from playwright.sync_api import Page
 
 # Solution from playwright-pytest issues: https://github.com/microsoft/playwright-pytest/issues/29
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")

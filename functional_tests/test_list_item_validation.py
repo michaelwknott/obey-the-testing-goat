@@ -1,5 +1,3 @@
-import pytest
-from playwright.sync_api import Browser
 from playwright.sync_api import Page
 from playwright.sync_api import expect
 
@@ -8,32 +6,52 @@ def test_cannot_add_empty_list_items(server_url: str, page: Page):
     # Edith goes to the home page and accidently tries to submit an empty list item.
     # She hits Enter on the empty input box
     page.goto(server_url)
-    inputbox = page.locator("#id_new_item")
+    inputbox = page.locator("#id_text")
     inputbox.press("Enter")
 
-    # The home page refreshes, and there is an error message saying that list items
-    # cannot be blank
-    page.wait_for_load_state("domcontentloaded")
-    error_text = page.locator(".is-invalid")
-    expect(error_text).to_contain_text("You can't have an empty list item!")
+    # The browser intercepts the request, and does not load the list page
+    page.wait_for_selector("#id_text:invalid")
 
-    # She tries again with some text for the item, which now workss
+    # She starts typing some text for the new item and the error disappears
     inputbox.fill("Buy milk")
-    inputbox.press("Enter")
+    page.wait_for_selector("#id_text:valid")
 
+    # And she can submit it successfully
+    inputbox.press("Enter")
     table = page.locator("#id_list_table")
     expect(table).to_be_visible()
     expect(table).to_contain_text("1: Buy milk")
 
     # Perversely, she now decides to submit another blank list item
     inputbox.press("Enter")
-    # She recieves a similar warning on the list page
-    page.wait_for_load_state("domcontentloaded")
-    error_text = page.locator(".is-invalid")
-    expect(error_text).to_contain_text("You can't have an empty list item!")
+
+    # Again the browser will not comply
+    expect(table).to_contain_text("1: Buy milk")
+    page.wait_for_selector("#id_text:invalid")
 
     # And she can correct it by filling some text in
     inputbox.fill("Buy tea")
+    page.wait_for_selector("#id_text:valid")
     inputbox.press("Enter")
     expect(table).to_contain_text("1: Buy milk")
     expect(table).to_contain_text("2: Buy tea")
+
+
+def test_cannot_add_duplicate_items(server_url: str, page: Page):
+    # Edith goes to the homepage and starts a new list
+    page.goto(server_url)
+    inputbox = page.locator("#id_text")
+    inputbox.fill("Buy wellies")
+    inputbox.press("Enter")
+
+    table = page.locator("#id_list_table")
+    expect(table).to_be_visible()
+    expect(table).to_contain_text("1: Buy wellies")
+
+    # She accidentally tries to enter a duplicate item
+    inputbox.fill("Buy wellies")
+    inputbox.press("Enter")
+
+    # She sees a helpful error message
+    error_message = page.locator(".is-invalid")
+    expect(error_message).to_contain_text("You've already got this in your list.")
