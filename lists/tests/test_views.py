@@ -1,7 +1,9 @@
 import pytest
 from django.utils.html import escape
 
+from lists.forms import DUPLICATE_ITEM_ERROR
 from lists.forms import EMPTY_ITEM_ERROR
+from lists.forms import ExistingListItemForm
 from lists.forms import ItemForm
 from lists.models import Item
 from lists.models import List
@@ -150,7 +152,7 @@ def test_displays_item_form(client):
     list_ = List.objects.create()
     response = client.get(f"/lists/{list_.id}/")
 
-    assert isinstance(response.context["form"], ItemForm)
+    assert isinstance(response.context["form"], ExistingListItemForm)
     assert 'name="text"' in response.content.decode()
 
 
@@ -169,14 +171,14 @@ def test_for_invalid_input_renders_list_template(client):
 
     assert response.status_code == 200
     assert response.templates[0].name == "list.html"
-
+    
 
 @pytest.mark.django_db
 def test_for_invalid_input_passes_form_to_template(client):
     list_ = List.objects.create()
     response = client.post(f"/lists/{list_.id}/", data={"text": ""})
 
-    assert isinstance(response.context["form"], ItemForm)
+    assert isinstance(response.context["form"], ExistingListItemForm)
 
 
 @pytest.mark.django_db
@@ -185,3 +187,17 @@ def test_for_invalid_input_shows_error_on_page(client):
     response = client.post(f"/lists/{list_.id}/", data={"text": ""})
 
     assert escape(EMPTY_ITEM_ERROR) in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_duplicate_item_validation_errors_end_up_on_lists_page(client):
+    list_ = List.objects.create()
+    item1 = Item.objects.create(list=list_, text="textey")
+    response = client.post(f"/lists/{list_.id}/", data={"text": "textey"})
+
+    expected_error = escape(DUPLICATE_ITEM_ERROR)
+
+    assert expected_error in response.content.decode()
+    assert response.templates[0].name == "list.html"
+    assert Item.objects.all().count() == 1
+    assert Item.objects.all().count() == 1

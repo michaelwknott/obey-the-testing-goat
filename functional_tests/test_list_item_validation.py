@@ -35,3 +35,23 @@ def test_cannot_add_empty_list_items(server_url: str, page: Page):
     inputbox.press("Enter")
     expect(table).to_contain_text("1: Buy milk")
     expect(table).to_contain_text("2: Buy tea")
+
+
+def test_cannot_add_duplicate_items(server_url: str, page: Page):
+    # Edith goes to the homepage and starts a new list
+    page.goto(server_url)
+    inputbox = page.locator("#id_text")
+    inputbox.fill("Buy wellies")
+    inputbox.press("Enter")
+
+    table = page.locator("#id_list_table")
+    expect(table).to_be_visible()
+    expect(table).to_contain_text("1: Buy wellies")
+
+    # She accidentally tries to enter a duplicate item
+    inputbox.fill("Buy wellies")
+    inputbox.press("Enter")
+
+    # She sees a helpful error message
+    error_message = page.locator(".is-invalid")
+    expect(error_message).to_contain_text("You've already got this in your list.")
