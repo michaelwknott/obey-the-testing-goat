@@ -30,7 +30,6 @@ def test_form_save_handles_saving_to_a_list():
     assert new_item == Item.objects.first()
     assert new_item.text == "do me"
     assert new_item.list == list_
-    assert new_item.list == list_
 
 
 @pytest.mark.django_db

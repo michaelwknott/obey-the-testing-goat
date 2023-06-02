@@ -171,7 +171,7 @@ def test_for_invalid_input_renders_list_template(client):
 
     assert response.status_code == 200
     assert response.templates[0].name == "list.html"
-
+    
 
 @pytest.mark.django_db
 def test_for_invalid_input_passes_form_to_template(client):
